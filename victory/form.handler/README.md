@@ -15,39 +15,26 @@
 
 ---
 
-## Установка и подключение
+## Установка
 
-1.  Скопируйте директорию `victory/` в `/local/components/`.
-2.  Разместите вызов компонента на странице, где находится ваша форма.
+1.  Перейдите в директорию `/local/components/` вашего проекта.
+2.  Клонируйте репозиторий:
+    ```bash
+    git clone https://github.com/bxmeta/bitrix-form-handler-component.git victory
+    ```
+    *Ключевой момент здесь — `victory`. Мы клонируем репозиторий в папку с именем вендора, чтобы Битрикс мог корректно найти компонент по неймспейсу `victory:form.handler`.*
 
-**Пример вызова компонента:**
+## Подключение на странице
 
+Разместите вызов компонента на странице, где находится ваша форма.
+
+**Пример вызова:**
 ```php
 $APPLICATION->IncludeComponent(
 	'victory:form.handler',
 	'.default', // или ваш кастомный шаблон
 	[
-		// --- Основные настройки ---
-		'STORAGE_TYPE' => 'iblock', // Тип хранилища: 'iblock' или 'highload'
-		'IBLOCK_ID' => 1,           // ID инфоблока для сохранения
-		'HLBLOCK_ID' => 2,          // ID HL-блока для сохранения
-
-		// --- Настройка почтовых уведомлений ---
-		'EMAIL_TO' => 'manager@example.com', // Email для получения уведомлений
-
-		// --- Защита от спама (на выбор) ---
-		'USE_RECAPTCHA' => 'Y',
-		'RECAPTCHA_SITEKEY' => 'your_site_key_from_google',
-		'RECAPTCHA_SECRET' => 'your_secret_key_from_google',
-
-		'USE_SMARTCAPTCHA' => 'Y',
-		'SMARTCAPTCHA_SITEKEY' => 'your_site_key_from_yandex',
-		'SMARTCAPTCHA_SECRET' => 'your_server_key_from_yandex',
-
-		// --- Интеграция с Bitrix24 ---
-		'B24_WEBHOOK' => 'https://your_portal.bitrix24.ru/rest/1/xxxxxxxxxxxxxx/',
-		'B24_MODE' => 'lead', // Режим создания: 'lead' или 'deal'
-		'B24_FIELDS_MAPPING' => '{"TITLE":"NAME", "NAME":"NAME", "PHONE":"PHONE", "EMAIL":"EMAIL", "COMMENTS":"MESSAGE"}',
+		// ... параметры ...
 	]
 );
 ```
