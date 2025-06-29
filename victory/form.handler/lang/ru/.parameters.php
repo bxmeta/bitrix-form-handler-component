@@ -1,0 +1,27 @@
+<?php
+$MESS['STORAGE_TYPE'] = 'Тип хранения';
+$MESS['STORAGE_TYPE_TIP'] = 'Выберите, где будут храниться данные формы: инфоблок или highload-блок.';
+$MESS['IBLOCK_ID'] = 'ID инфоблока';
+$MESS['IBLOCK_ID_TIP'] = 'Укажите ID инфоблока для хранения данных.';
+$MESS['HLBLOCK_ID'] = 'ID Highload-блока';
+$MESS['HLBLOCK_ID_TIP'] = 'Укажите ID highload-блока для хранения данных.';
+$MESS['USE_RECAPTCHA'] = 'Использовать Google reCAPTCHA';
+$MESS['USE_RECAPTCHA_TIP'] = 'Включить защиту формы через Google reCAPTCHA.';
+$MESS['RECAPTCHA_SECRET'] = 'Секретный ключ reCAPTCHA';
+$MESS['RECAPTCHA_SECRET_TIP'] = 'Секретный ключ для проверки Google reCAPTCHA.';
+$MESS['RECAPTCHA_SITEKEY'] = 'Публичный ключ reCAPTCHA';
+$MESS['RECAPTCHA_SITEKEY_TIP'] = 'Публичный ключ для отображения Google reCAPTCHA.';
+$MESS['USE_SMARTCAPTCHA'] = 'Использовать Yandex SmartCaptcha';
+$MESS['USE_SMARTCAPTCHA_TIP'] = 'Включить защиту формы через Yandex SmartCaptcha.';
+$MESS['SMARTCAPTCHA_SECRET'] = 'Секретный ключ SmartCaptcha';
+$MESS['SMARTCAPTCHA_SECRET_TIP'] = 'Секретный ключ для проверки Yandex SmartCaptcha.';
+$MESS['SMARTCAPTCHA_SITEKEY'] = 'Публичный ключ SmartCaptcha';
+$MESS['SMARTCAPTCHA_SITEKEY_TIP'] = 'Публичный ключ для отображения Yandex SmartCaptcha.';
+$MESS['EMAIL_TO'] = 'Email для уведомлений';
+$MESS['EMAIL_TO_TIP'] = 'Email, на который будут отправляться уведомления.';
+$MESS['B24_WEBHOOK'] = 'Вебхук Bitrix24';
+$MESS['B24_WEBHOOK_TIP'] = 'URL вебхука для интеграции с Bitrix24.';
+$MESS['B24_MODE'] = 'Bitrix24: режим';
+$MESS['B24_MODE_TIP'] = 'Выберите, что создавать в Bitrix24: лид или сделку.';
+$MESS['B24_FIELDS_MAPPING'] = 'Соответствие полей для Bitrix24';
+$MESS['B24_FIELDS_MAPPING_TIP'] = 'Укажите JSON-объект, где ключ - поле Bitrix24, а значение - имя поля из формы (атрибут name).'; 
