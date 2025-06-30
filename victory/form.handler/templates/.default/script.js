@@ -7,8 +7,10 @@ window.VictoryFormHandler = function(params) {
 
     this.submitBtn = this.form.querySelector('button[type="submit"]');
     this.errorsDiv = document.getElementById(params.formId + '_errors');
+    this.spinnerDiv = document.getElementById(params.formId + '_spinner');
     this.useSmartCaptcha = params.useSmartCaptcha || false;
     this.smartCaptchaId = null;
+    this.isSubmitting = false; // Флаг для предотвращения повторных отправок
 
     this.init();
 };
@@ -27,9 +29,62 @@ VictoryFormHandler.prototype.showMessage = function(message, isSuccess) {
     this.errorsDiv.innerHTML = message;
 };
 
+VictoryFormHandler.prototype.showSpinner = function() {
+    if (this.spinnerDiv) {
+        this.spinnerDiv.classList.add('active');
+    }
+    
+    // Добавляем класс загрузки к форме
+    this.form.classList.add('form-loading');
+    
+    // Добавляем класс загрузки к кнопке
+    if (this.submitBtn) {
+        this.submitBtn.classList.add('loading');
+        this.submitBtn.disabled = true;
+    }
+    
+    // Блокируем все элементы формы
+    const formElements = this.form.querySelectorAll('input, textarea, select, button');
+    formElements.forEach(element => {
+        element.disabled = true;
+    });
+};
+
+VictoryFormHandler.prototype.hideSpinner = function() {
+    if (this.spinnerDiv) {
+        this.spinnerDiv.classList.remove('active');
+    }
+    
+    // Убираем класс загрузки с формы
+    this.form.classList.remove('form-loading');
+    
+    // Убираем класс загрузки с кнопки
+    if (this.submitBtn) {
+        this.submitBtn.classList.remove('loading');
+        this.submitBtn.disabled = false;
+    }
+    
+    // Разблокируем все элементы формы
+    const formElements = this.form.querySelectorAll('input, textarea, select, button');
+    formElements.forEach(element => {
+        element.disabled = false;
+    });
+};
+
 VictoryFormHandler.prototype.handleSubmit = async function(e) {
     e.preventDefault();
-    if (this.submitBtn) this.submitBtn.disabled = true;
+    
+    // Защита от повторных отправок
+    if (this.isSubmitting) {
+        console.log('Форма уже отправляется...');
+        return;
+    }
+    
+    this.isSubmitting = true;
+    this.showSpinner();
+    
+    // Очищаем предыдущие сообщения
+    this.showMessage('', true);
 
     try {
         const formData = new FormData(this.form);
@@ -51,12 +106,17 @@ VictoryFormHandler.prototype.handleSubmit = async function(e) {
         if (resp.success) {
             this.showMessage(resp.message, true);
             this.form.reset();
+            
+            // Сброс капчи
             if (window.grecaptcha) {
-                // Reset reCAPTCHA if it exists on the form
                 const recaptchaContainer = this.form.querySelector('.g-recaptcha');
                 if (recaptchaContainer && recaptchaContainer.id) {
                      grecaptcha.reset();
                 }
+            }
+            
+            if (this.useSmartCaptcha && this.smartCaptchaId !== null && window.smartCaptcha) {
+                window.smartCaptcha.reset(this.smartCaptchaId);
             }
         } else {
             const errorMessages = resp.errors ? '<br>' + Object.values(resp.errors).join('<br>') : '';
@@ -67,10 +127,8 @@ VictoryFormHandler.prototype.handleSubmit = async function(e) {
         this.showMessage('Ошибка сети или некорректный ответ сервера.', false);
         console.error('Form submission error:', error);
     } finally {
-        if (this.submitBtn) this.submitBtn.disabled = false;
-        if (this.useSmartCaptcha && this.smartCaptchaId !== null && window.smartCaptcha) {
-            window.smartCaptcha.reset(this.smartCaptchaId);
-        }
+        this.isSubmitting = false;
+        this.hideSpinner();
     }
 };
 

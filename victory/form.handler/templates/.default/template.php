@@ -4,7 +4,14 @@
 /** @var CBitrixComponentTemplate $this */
 $formId = 'form_' . $arResult['FORM_ID'];
 ?>
+
 <form id="<?= $formId ?>" class="victory-form-handler" enctype="multipart/form-data">
+    <!-- Спиннер загрузки -->
+    <div id="<?= $formId ?>_spinner" class="victory-form-spinner">
+        <div class="victory-spinner"></div>
+        <span>Отправка формы...</span>
+    </div>
+    
     <div id="<?= $formId ?>_errors" class="form-errors" style="color:red;"></div>
 
     <!-- Пример полей, замените на свои -->
@@ -24,7 +31,7 @@ $formId = 'form_' . $arResult['FORM_ID'];
         <input type="hidden" name="smart-token" id="<?= $formId ?>_smart_token">
     <?php endif; ?>
 
-    <button type="submit">Отправить</button>
+    <button type="submit" class="submit-btn">Отправить</button>
 </form>
 
 <script>
@@ -39,7 +46,8 @@ $formId = 'form_' . $arResult['FORM_ID'];
 </script>
 
 <?php
-// Подключаем JS и API капчи только один раз
+// Подключаем CSS, JS и API капчи только один раз
+$this->addExternalCss($this->GetFolder().'/style.css');
 $this->addExternalJs($this->GetFolder().'/script.js');
 if ($arParams['USE_RECAPTCHA'] === 'Y') {
     $this->addExternalJs('https://www.google.com/recaptcha/api.js');
