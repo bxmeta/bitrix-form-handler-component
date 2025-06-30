@@ -116,22 +116,52 @@ $APPLICATION->IncludeComponent(
 // /local/php_interface/init.php
 
 use Bitrix\Main\Event;
+use Bitrix\Main\EventManager;
 use Victory\FormHandler\Lib\ValidationException;
 
-AddEventHandler('victory', 'OnBeforeFormSave', function(Event $event) {
-    $arFields = $event->getParameter('FIELDS');
-    $arParams = $event->getParameter('PARAMS');
+// Подписка на событие с использованием D7 EventManager
+EventManager::getInstance()->addEventHandler(
+    'victory', 
+    'OnBeforeFormSave', 
+    function (Event $event) {
+        $arFields = &$event->getParameter('FIELDS');
+        $arParams = $event->getParameter('PARAMS');
 
-    // Пример: проверяем, что в поле PHONE не менее 10 цифр
-    $phone = preg_replace('/[^0-9]/', '', $arFields['PHONE']);
-    if (strlen($phone) < 10) {
-        // Выбрасываем исключение, которое будет поймано компонентом
-        throw new ValidationException('Проверьте номер телефона.', ['PHONE' => 'Номер телефона слишком короткий']);
+        // Пример: проверяем, что в поле PHONE не менее 10 цифр
+        $phone = preg_replace('/[^0-9]/', '', $arFields['PHONE'] ?? '');
+        if (strlen($phone) < 10) {
+            // Выбрасываем исключение, которое будет поймано компонентом
+            throw new ValidationException('Проверьте номер телефона.', ['PHONE' => 'Номер телефона слишком короткий']);
+        }
+
+        // Можно модифицировать поля перед сохранением
+        // $arFields['PROPERTY_SOME_FIELD'] = 'новое значение';
     }
+);
 
-    // Можно модифицировать поля перед сохранением
-    // $arFields['PROPERTY_SOME_FIELD'] = 'новое значе��ие';
-});
+// Пример обработчика события после сохранения
+EventManager::getInstance()->addEventHandler(
+    'victory', 
+    'OnAfterFormSave', 
+    function (Event $event) {
+        $arFields = $event->getParameter('FIELDS');
+        $arParams = $event->getParameter('PARAMS');
+        $elementId = $event->getParameter('ID');
+
+        // Пример: отправка SMS уведомления
+        if (!empty($arFields['PHONE'])) {
+            // Здесь может быть ваш код для отправки SMS
+            // SmsService::send($arFields['PHONE'], 'Спасибо за обращение!');
+        }
+
+        // Логирование для отладки
+        \Bitrix\Main\Diag\Debug::writeToFile([
+            'event' => 'OnAfterFormSave',
+            'id' => $elementId,
+            'fields' => $arFields
+        ], 'Form Handler Success', '/bitrix/logs/form_handler_success.log');
+    }
+);
 ```
 
 ---
