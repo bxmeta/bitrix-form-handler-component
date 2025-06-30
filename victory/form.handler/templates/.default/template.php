@@ -46,9 +46,7 @@ $formId = 'form_' . $arResult['FORM_ID'];
 </script>
 
 <?php
-// Подключаем CSS, JS и API капчи только один раз
-$this->addExternalCss($this->GetFolder().'/style.css');
-$this->addExternalJs($this->GetFolder().'/script.js');
+// Подключаем API капчи только один раз (CSS и JS подключаются автоматически)
 if ($arParams['USE_RECAPTCHA'] === 'Y') {
     $this->addExternalJs('https://www.google.com/recaptcha/api.js');
 }
